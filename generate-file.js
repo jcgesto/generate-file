@@ -16,13 +16,18 @@ function generateCssVariables(breakpoints) {
   return result; 
 }
 
-var sassVariables = generateSassVariables(breakpoints)
-var cssVariables = generateCssVariables(breakpoints)
-var content = sassVariables.concat([''],cssVariables)
+var sassVariables = generateSassVariables(breakpoints);
+var cssVariables = generateCssVariables(breakpoints);
+var content = sassVariables.concat([''],cssVariables);
 
 fs.writeFile('output.scss', content.join('\n'), function (err) {
   if (err) {
     return console.log(err);
   }
   console.log("File generated succesfully");
+});
+
+const writeStream = fs.createWriteStream('streamed-output.scss')
+content.forEach(line => {
+  writeStream.write(`${line}\n`);
 });
