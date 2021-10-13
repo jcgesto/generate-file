@@ -1,19 +1,22 @@
 var fs = require('fs');
 var breakpoints = require('./breakpoints.json');
 
-var sassVariables = Object.keys(breakpoints).map(breakpointKey => {
-  return `$${breakpointKey}: ${breakpoints[breakpointKey]};`
-})
+function generateSassVariables(breakpoints) {
+  return Object.keys(breakpoints).map(breakpointKey => {
+    return `$${breakpointKey}: ${breakpoints[breakpointKey]};`
+  });
+}
 
 function generateCssVariables(breakpoints) {
   var result = Object.keys(breakpoints).map(breakpointKey => {
     return `\t$${breakpointKey}: ${breakpoints[breakpointKey]};`
-  })
-  cssVariables.unshift(':root {')
-  cssVariables.push('}')
-  return cssVariables 
+  });
+  result.unshift(':root {');
+  result.push('}');
+  return result; 
 }
 
+var sassVariables = generateSassVariables(breakpoints)
 var cssVariables = generateCssVariables(breakpoints)
 var content = sassVariables.concat([''],cssVariables)
 
