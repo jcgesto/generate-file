@@ -1,5 +1,5 @@
-var fs = require('fs');
-var breakpoints = require('./breakpoints.json');
+const fs = require('fs');
+const breakpoints = require('./breakpoints.json');
 
 function generateSassVariables(breakpoints) {
   return Object.keys(breakpoints).map(breakpointKey => {
@@ -16,9 +16,9 @@ function generateCssVariables(breakpoints) {
   return result; 
 }
 
-var sassVariables = generateSassVariables(breakpoints);
-var cssVariables = generateCssVariables(breakpoints);
-var content = sassVariables.concat([''],cssVariables);
+const sassVariables = generateSassVariables(breakpoints);
+const cssVariables = generateCssVariables(breakpoints);
+const content = sassVariables.concat([''],cssVariables);
 
 fs.writeFile('output.scss', content.join('\n'), function (err) {
   if (err) {
@@ -28,6 +28,13 @@ fs.writeFile('output.scss', content.join('\n'), function (err) {
 });
 
 const writeStream = fs.createWriteStream('streamed-output.scss')
+writeStream.on('error', (err) => {
+  console.log(err);
+});
+writeStream.on('finish', (err) => {
+  console.log('Streamed file generated succesfully');
+});
 content.forEach(line => {
   writeStream.write(`${line}\n`);
 });
+writeStream.end();
